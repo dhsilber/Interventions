@@ -116,11 +116,12 @@ class InterventionViewModel : ViewModel() {
             if (clickedOn.isBinder) {
                 clickedOn.done = true
                 clickedOn.earliestBinder = LocalTime.MIN
+                showingInterventions = showingInterventions.filter { it.id != clickedOn.id }.toMutableList()
                 _uiState.update { currentState ->
                     currentState.copy(
                         currentBinder = -1,
                         noFoodOrSupplementsEndTime = LocalTime.MIN,
-                        interventions = showingInterventions,
+                        interventions = interventionList(),
                     )
                 }
             }
