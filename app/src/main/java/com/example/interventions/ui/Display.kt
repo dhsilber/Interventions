@@ -153,34 +153,36 @@ fun InterventionDisplay(
         }
     }
 
-    val weight = if (active or view) FontWeight.Bold else FontWeight.Normal
-    val color = when {
-        intervention.done -> Color.Gray
-        active -> Color.White
-        else -> Color.Black
-    }
-    val background = when {
-        intervention.done -> Color.LightGray
-        intervention.isBinder and (intervention.earliestBinder > LocalTime.MIN) -> Color.Red
-        (uiState.noFoodOrSupplementsEndTime > LocalTime.now()) and (intervention.isSupplement or intervention.isFood) -> Color(0xFFFFC0CB)
-        active -> Color.Blue
-        view -> Color.Green
-        else -> Color.White
-    }
-    val height = if (active or view) 30.sp else 20.sp
-    val padding = if (active or view) 8.dp else 4.dp
+//    val weight = if (active or view) FontWeight.Bold else FontWeight.Normal
+//    val color = when {
+//        intervention.done -> Color.Gray
+//        active -> Color.White
+//        else -> Color.Black
+//    }
+//    val background = when {
+//        intervention.done -> Color.LightGray
+//        intervention.isBinder and (intervention.earliestBinder > LocalTime.MIN) -> Color.Red
+//        (uiState.noFoodOrSupplementsEndTime > LocalTime.now()) and (intervention.isSupplement or intervention.isFood) -> Color(0xFFFFC0CB)
+//        active -> Color.Blue
+//        view -> Color.Green
+//        else -> Color.White
+//    }
+//    val height = if (active or view) 30.sp else 20.sp
+//    val padding = if (active or view) 8.dp else 4.dp
 
     if (waiting) {
         val endTime = intervention.startTime?.plus(intervention.duration)
     }
 
+    var ui = viewModel.ui(intervention)
+
     Card(
         colors = CardDefaults.cardColors(
-            contentColor = color,
-            containerColor = background
+            contentColor = ui.color,
+            containerColor = ui.background
         ),
         modifier = modifier
-            .background(background)
+            .background(ui.background)
             .combinedClickable(
                 enabled = true,
                 onClick = { viewModel.clickAction(intervention.id) },
@@ -189,10 +191,10 @@ fun InterventionDisplay(
     ) {
         Text(
             text = "${intervention.id} - ${intervention.text}",
-            fontWeight = weight,
-            lineHeight = height,
+            fontWeight = ui.weight,
+            lineHeight = ui.lineHeight,
             modifier = modifier
-                .padding(padding)
+                .padding(ui.padding)
                 .fillMaxWidth(),
         )
         if (active or view) {

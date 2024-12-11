@@ -1,5 +1,9 @@
 package com.example.interventions.ui
 
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModel
 import com.example.interventions.Intervention
 import com.example.interventions.interventionSource
@@ -9,6 +13,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import java.time.LocalTime
+import java.util.Objects.isNull
 
 class InterventionViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(UiState())
@@ -20,23 +25,59 @@ class InterventionViewModel : ViewModel() {
     private var viewing: Int = -1
 
     private var showingDone: Boolean = false
-    private var interventions: MutableList<Intervention> = planningEngine()
+    private var interventions: MutableList<Intervention> = mutableListOf()
     private var showingInterventions: MutableList<Intervention> = interventions
 
     init {
-        _uiState.update { currentState ->
-            currentState.copy( interventions = interventions)
-        }
+        resetUiState()
     }
 
     private fun resetUiState() {
         interventions = planningEngine()
+        showingInterventions = interventions
         _uiState.value = UiState(
             current = 0,
             viewing = -1,
             interventions = interventions,
             noFoodOrSupplementsEndTime = LocalTime.MIN,
             currentBinder = null,
+        )
+    }
+
+    fun ui(intervention: Intervention) : InterventionUi {
+
+        val active = current == intervention.id
+        val view = uiState.value.viewing == intervention.id
+
+        if (active and !isNull(intervention.duration)) {
+            if (isNull(intervention.startTime)) {
+                intervention.startTime = LocalTime.now()
+            }
+        }
+
+        val weight = if (active or view) FontWeight.Bold else FontWeight.Normal
+        val color = when {
+            intervention.done -> Color.Gray
+            active -> Color.White
+            else -> Color.Black
+        }
+        val background = when {
+            intervention.done -> Color.LightGray
+            intervention.isBinder and (intervention.earliestBinder > LocalTime.MIN) -> Color.Red
+            (uiState.value.noFoodOrSupplementsEndTime > LocalTime.now()) and (intervention.isSupplement or intervention.isFood) -> Color(0xFFFFC0CB)
+            active -> Color.Blue
+            view -> Color.Green
+            else -> Color.White
+        }
+        val height = if (active or view) 30.sp else 20.sp
+        val padding = if (active or view) 8.dp else 4.dp
+
+        return InterventionUi(
+            weight = weight,
+            color = color,
+            background = background,
+            lineHeight = height,
+            padding = padding,
         )
     }
 
