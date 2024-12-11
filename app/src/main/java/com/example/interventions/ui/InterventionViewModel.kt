@@ -49,11 +49,11 @@ class InterventionViewModel : ViewModel() {
         val active = current == intervention.id
         val view = uiState.value.viewing == intervention.id
 
-        if (active and !isNull(intervention.duration)) {
-            if (isNull(intervention.startTime)) {
-                intervention.startTime = LocalTime.now()
-            }
-        }
+//        if (active and !isNull(intervention.duration)) {
+//            if (isNull(intervention.startTime)) {
+//                intervention.startTime = LocalTime.now()
+//            }
+//        }
 
         val weight = if (active or view) FontWeight.Bold else FontWeight.Normal
         val color = when {
