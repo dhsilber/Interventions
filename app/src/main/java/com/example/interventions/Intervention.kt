@@ -1,10 +1,11 @@
 package com.example.interventions
 
+import com.example.interventions.ui.InterventionUi
 import java.time.Duration
 import java.time.LocalTime
 
 data class Intervention(
-    val id: Int,
+    val id: Int = 0,
 
     val text: String,
     val extraText: MutableList<String> = mutableListOf(),
@@ -17,6 +18,7 @@ data class Intervention(
     var earliestBinder: LocalTime = LocalTime.MIN,
     var binderTime: LocalTime = LocalTime.MIN,
     var done: Boolean = false,
+    var ui: InterventionUi = InterventionUi()
 ) {
     fun extra( text: String): Intervention {
         extraText.add(text)
@@ -55,8 +57,10 @@ val interventionSource = listOf<Intervention>(
 //    Intervention(id = 0, "Wait one hour").duration("PT1H"),
     Intervention(id = 0, "Ultra Binder", isBinder = true).extra("Two teaspoons in a glass of water"),
 //    Intervention(id = 0, "Wait two hours").duration("PT2H"),
-    Intervention(id = 0, "BitterX", isSupplement = true).extra("Six squirts").extra("Let absorb through mouth for 60-90 seconds before swallowing"),
+    Intervention(text = "Floss & brush teeth").extra("Rinse & gargle with antiseptic mouthwash and then hydrogen peroxided 1:1 with water"),
     Intervention(id = 0, "Last pills", isSupplement = true),
     Intervention(id = 0, "Glutathione", isSupplement = true),
+    Intervention(id = 0, "BitterX", isSupplement = true).extra("Six squirts").extra("Let absorb through mouth for 60-90 seconds before swallowing"),
+    Intervention(text = "Deploy 'production' version of Interventions"),
     Intervention(id = 0, "Bedtime").time("22:00"),
 )

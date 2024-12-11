@@ -76,7 +76,7 @@ fun InterventionList(
 //    clickAction: (Int) -> Unit,
 //    clickCurrent: Int,
     interventions: List<Intervention>,
-    currentBinder: Int,
+    currentBinder: Intervention?,
     modifier: Modifier = Modifier
 ) {
 
@@ -89,12 +89,10 @@ fun InterventionList(
 //        item { Text( text = "Item Count: $itemcount", modifier = Modifier.background(Color.Cyan)) }
 //        item { Text( text = "Current: $current", modifier = Modifier.background(Color.Cyan)) }
 //        item { Text( text = "Click Current: $clickCurrent", modifier = Modifier.background(Color.Cyan)) }
-        if (currentBinder >= 0) {
-            val intervention = interventions.find { it.id == currentBinder }
-            if (null != intervention) {
+        if (null != currentBinder) {
                 item {
                     InterventionDisplay(
-                        intervention = intervention,
+                        intervention = currentBinder,
 //                onClickAction = { viewModel.clickAction() },
 //                onLongClickAction = {
 //                    viewing.intValue = -1
@@ -105,7 +103,6 @@ fun InterventionList(
 //                clickAction = clickAction,
                         modifier = Modifier.padding(vertical = 3.dp)
                     )
-                }
             }
         }
         items(
@@ -113,7 +110,7 @@ fun InterventionList(
             key = null,
         ) { intervention ->
 //            val active = current.intValue == intervention.id
-            if (intervention.id != currentBinder) {
+            if (intervention.id != currentBinder?.id) {
                 InterventionDisplay(
                     intervention = intervention,
 //                onClickAction = { viewModel.clickAction() },

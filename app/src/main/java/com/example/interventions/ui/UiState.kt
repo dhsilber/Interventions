@@ -8,6 +8,6 @@ data class UiState (
     val viewing: Int = -1,
     val interventions: List<Intervention> = emptyList(),
     val noFoodOrSupplementsEndTime: LocalTime = LocalTime.MIN,
-    val currentBinder: Int = -1,
+    val currentBinder: Intervention? = null,
     val showDoneButtonText: String = "Show Done"
 )

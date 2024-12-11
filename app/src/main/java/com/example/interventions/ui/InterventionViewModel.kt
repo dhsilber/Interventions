@@ -17,9 +17,6 @@ class InterventionViewModel : ViewModel() {
     private var current: Int = 0
         get() = uiState.value.current
 
-    private var currentBinder: Int = -1
-        get() = uiState.value.currentBinder
-
     private var viewing: Int = -1
 
     private var showingDone: Boolean = false
@@ -39,7 +36,7 @@ class InterventionViewModel : ViewModel() {
             viewing = -1,
             interventions = interventions,
             noFoodOrSupplementsEndTime = LocalTime.MIN,
-            currentBinder = -1,
+            currentBinder = null,
         )
     }
 
@@ -49,7 +46,7 @@ class InterventionViewModel : ViewModel() {
         else
             _uiState.update { currentState ->
                 currentState.copy(current = interventionId + 1)
-            }
+        }
     }
 
     private fun interventionList() : MutableList<Intervention> {
@@ -95,7 +92,7 @@ class InterventionViewModel : ViewModel() {
                         currentState.copy(
                             interventions = interventionList(),
                             noFoodOrSupplementsEndTime = LocalTime.now().plusHours(3),
-                            currentBinder = intervention.id,
+                            currentBinder = intervention,
                         )
                     }
                     incrementCurrent(intervention.id)
@@ -119,7 +116,7 @@ class InterventionViewModel : ViewModel() {
                 showingInterventions = showingInterventions.filter { it.id != clickedOn.id }.toMutableList()
                 _uiState.update { currentState ->
                     currentState.copy(
-                        currentBinder = -1,
+                        currentBinder = null,
                         noFoodOrSupplementsEndTime = LocalTime.MIN,
                         interventions = interventionList(),
                     )
